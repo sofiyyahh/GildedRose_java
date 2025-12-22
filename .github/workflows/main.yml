@@ -25,3 +25,4 @@ jobs:
 
     - name: Build and run tests
       run: gradle test
+      working-directory: java
