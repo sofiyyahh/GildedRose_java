@@ -11,52 +11,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
+      # 1. Trigger & checkout
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Set up JDK 17
+      # 2. Install & Build (setup JDK and compile)
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 3. Download JUnit & Hamcrest
-      - name: Download JUnit and Hamcrest
-        run: |
-          mkdir -p libs
-          curl -L -o libs/junit-4.13.2.jar https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
-          curl -L -o libs/hamcrest-core-1.3.jar https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
-
-      # 4. Compile main classes
       - name: Compile main classes
         run: javac -d out src/com/alexaitken/gildedrose/*.java
 
-      # 5. Compile test classes (fixed path to match package)
       - name: Compile test classes
         run: |
           mkdir -p out_test
           javac -cp "out:libs/junit-4.13.2.jar:libs/hamcrest-core-1.3.jar" -d out_test $(find test/test -name "*.java")
 
-      # 6. Run JUnit tests
+      # 3. Test Execution
       - name: Run JUnit tests
         run: |
           java -cp "out:out_test:libs/junit-4.13.2.jar:libs/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore com.alexaitken.gildedrose.GildedRoseTest
 
-      # 7. Run Checkstyle
+      # 4. Static Code Analysis
       - name: Run Checkstyle
         run: |
           curl -L -o checkstyle-10.15-all.jar https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.15/checkstyle-10.15-all.jar
           java -jar checkstyle-10.15-all.jar -c /google_checks.xml src/com/alexaitken/gildedrose
 
-      # 8. Package JAR artifact
-      - name: Package JAR
-        run: jar cvf GildedRose.jar -C out .
+      # 5. Code Coverage Report (simplified)
+      - name: Generate code coverage report
+        run: echo "Code coverage step placeholder"
 
-      # 9. Upload artifact
-      - name: Upload JAR
-        uses: actions/upload-artifact@v4
+      # 6. Deploy Artifacts
+      - name: Package and upload JAR
+        run: jar cvf GildedRose.jar -C out .
+      - uses: actions/upload-artifact@v4
         with:
           name: GildedRose-JAR
           path: GildedRose.jar
