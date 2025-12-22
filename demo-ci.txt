@@ -1,0 +1,4 @@
+This file is created to demonstrate the GitHub Actions CI workflow.
+
+Any push to the main branch will trigger the Java CI pipeline,
+including build, test execution, and code coverage generation.
