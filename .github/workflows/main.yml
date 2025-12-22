@@ -20,8 +20,8 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
 
-    - name: Make Gradle wrapper executable
-      run: chmod +x gradlew
+    - name: Set up Gradle
+      uses: gradle/gradle-build-action@v2
 
-    - name: Build and run tests with Gradle
-      run: ./gradlew test
+    - name: Build and run tests
+      run: gradle test
