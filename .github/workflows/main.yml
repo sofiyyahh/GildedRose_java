@@ -33,9 +33,9 @@ jobs:
       - name: Compile main classes
         run: javac -d out src/com/alexaitken/gildedrose/*.java
 
-      # 5. Compile test classes
+      # 5. Compile test classes (fixed path)
       - name: Compile test classes
-        run: javac -cp "out:libs/junit-4.13.2.jar:libs/hamcrest-core-1.3.jar" -d out_test test/test/com/alexaitken/gildedrose/*.java
+        run: javac -cp "out:libs/junit-4.13.2.jar:libs/hamcrest-core-1.3.jar" -d out_test $(find test/test/com/alexaitken/gildedrose -name "*.java")
 
       # 6. Run JUnit tests
       - name: Run JUnit tests
