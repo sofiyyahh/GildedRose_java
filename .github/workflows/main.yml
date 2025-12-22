@@ -33,11 +33,11 @@ jobs:
       - name: Compile main classes
         run: javac -d out src/com/alexaitken/gildedrose/*.java
 
-      # 5. Compile test classes (with JUnit & Hamcrest on classpath)
+      # 5. Compile test classes
       - name: Compile test classes
         run: |
           mkdir -p out_test
-          javac -cp "out:libs/junit-4.13.2.jar:libs/hamcrest-core-1.3.jar" -d out_test $(find test/test/com/alexaitken/gildedrose -name "*.java")
+          javac -cp "out:libs/junit-4.13.2.jar:libs/hamcrest-core-1.3.jar" -d out_test $(find test/test -name "*.java")
 
       # 6. Run JUnit tests
       - name: Run JUnit tests
