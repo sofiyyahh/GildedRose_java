@@ -50,13 +50,37 @@ jobs:
                org.junit.runner.JUnitCore \
                test.com.alexaitken.gildedrose.InventoryTest
 
-      # 7. Package artifact
+      # 7. Static code analysis (Checkstyle)
+      - name: Static Code Analysis
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+      - name: Run Checkstyle
+        run: |
+          curl -L -o checkstyle.jar https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.14.0/checkstyle-10.14.0-all.jar
+          java -jar checkstyle.jar -c https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml src/com/alexaitken/gildedrose/*.java
+
+      # 8. Code coverage (JaCoCo)
+      - name: Setup JaCoCo
+        run: |
+          curl -L -o jacoco.jar https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.12/org.jacoco.cli-0.8.12-nodeps.jar
+      - name: Run tests with JaCoCo
+        run: |
+          java -javaagent:jacoco.jar=destfile=jacoco.exec -cp "out:out_test:libs/junit-4.13.2.jar:libs/hamcrest-core-1.3.jar" \
+               org.junit.runner.JUnitCore \
+               test.com.alexaitken.gildedrose.InventoryTest
+      - name: Generate JaCoCo Report
+        run: |
+          java -jar jacoco.jar report jacoco.exec --classfiles out --sourcefiles src --html report
+
+      # 9. Package artifact
       - name: Package JAR
         run: jar cvf GildedRose.jar -C out .
 
-      # 8. Upload artifact
+      # 10. Upload artifact
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: GildedRose-JAR
           path: GildedRose.jar
+
